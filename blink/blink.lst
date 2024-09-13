@@ -1,0 +1,241 @@
+gpasm-1.4.0 #1107 (Jan  1 2021)       blink.s   8-28-2024  13:57:32         PAGE  1
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+                      00001 ; https://linuxgazette.net/issue79/sebastian.html
+                      00002 
+                      00003        list p=16f84, r=hex
+                      00004 #include <p16f84.inc>
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ; Build date : Aug 07 2014
+                      00005 ;  MPASM PIC16F84 processor include
+                      00006 ; 
+                      00007 ;  (c) Copyright 1999-2014 Microchip Technology, All rights reserved
+                      00008 ;==========================================================================
+                      00009 
+                      00207         LIST
+                      00005 
+  00000001            00006 f              equ     1
+  00000005            00007 porta          equ     0x5             ;specify the address of the ports
+  00000006            00008 portb          equ     0x6             ;
+  0000000C            00009 Delay_i        equ     0xc             ;The first byte of RAM available.
+  0000000D            00010 Long_Delay_i   equ 0xd
+  0000000E            00011 tmp            equ     0xe
+                      00012 
+0000   280F           00013        goto Main
+                      00014 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                      00015 ;
+                      00016 ; The following subroutine makes a 1 ms delay for a clock of 4Mhz for the PIC.
+                      00017 ;
+                      00018 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+0001                  00019 Delay:
+0001   30FF           00020        movlw 0xff
+0002   008C           00021        movwf Delay_i
+0003   0000           00022 L1:     nop
+0004   0B8C           00023        decfsz Delay_i, f
+0005   2803           00024        goto L1
+0006   0008           00025        return
+                      00026 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                      00027 ;
+                      00028 ;      This subroutine produces a 1 sec delay( approx.).
+                      00029 ;
+                      00030 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+0007                  00031 Long_Delay:
+0007   008E           00032        movwf tmp
+0008   30FF           00033        movlw 0xff
+0009   008D           00034        movwf Long_Delay_i
+000A   2001           00035 L2:     call Delay
+000B   0B8D           00036        decfsz Long_Delay_i, f
+000C   280A           00037        goto L2
+000D   080E           00038        movf tmp,w
+000E   0008           00039        return
+                      00040 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+                      00041 ;
+                      00042 ;The following code configures all ports as output ports.
+                      00043 ;If you want to configure a port as input port, change the
+gpasm-1.4.0 #1107 (Jan  1 2021)       blink.s   8-28-2024  13:57:32         PAGE  2
+
+
+LOC    OBJECT CODE    LINE  SOURCE TEXT
+  VALUE
+
+                      00044 ;corresponding bit to 1 in TRIS register.
+                      00045 ;For eg.if you want to use port portb0-3 as input and all other as output
+                      00046 ;pins, use instructions
+                      00047 ;
+                      00048 ;      movlw 0x0
+                      00049 ;      tris porta
+                      00050 ;      movlw 0x0F
+                      00051 ;      tris portb
+                      00052 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+000F                  00053 Main:
+000F   3000           00054        movlw 0x0
+Warning[224]: Use of this instruction is not recommended: "tris"
+0010   0065           00055        tris porta
+Warning[224]: Use of this instruction is not recommended: "tris"
+0011   0066           00056        tris portb
+                      00057 
+0012   30FF           00058        movlw 0xff
+0013   0086           00059        movwf portb
+0014                  00060 L3:
+0014   2007           00061        call Long_Delay         ;make a 1 sec delay between blinking.
+0015   0986           00062        comf portb,f            ;complement portb
+0016   2814           00063        goto L3
+                      00064 
+                      00065        end
+gpasm-1.4.0 #1107 (Jan  1 2021)       blink.s   8-28-2024  13:57:32         PAGE  3
+
+
+SYMBOL TABLE
+  LABEL                             VALUE
+
+C                                 00000000
+DC                                00000001
+Delay                             00000001
+Delay_i                           0000000C
+EEADR                             00000009
+EECON1                            00000088
+EECON2                            00000089
+EEDATA                            00000008
+EEIE                              00000006
+EEIF                              00000004
+F                                 00000001
+FSR                               00000004
+GIE                               00000007
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+L1                                00000003
+L2                                0000000A
+L3                                00000014
+Long_Delay                        00000007
+Long_Delay_i                      0000000D
+Main                              0000000F
+NOT_PD                            00000003
+NOT_RBPU                          00000007
+NOT_TO                            00000004
+OPTION_REG                        00000081
+PCL                               00000002
+PCLATH                            0000000A
+PORTA                             00000005
+PORTB                             00000006
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+RA0                               00000000
+RA1                               00000001
+RA2                               00000002
+RA3                               00000003
+RA4                               00000004
+RB0                               00000000
+RB1                               00000001
+RB2                               00000002
+RB3                               00000003
+RB4                               00000004
+RB5                               00000005
+RB6                               00000006
+RB7                               00000007
+RBIE                              00000003
+RBIF                              00000000
+RD                                00000000
+gpasm-1.4.0 #1107 (Jan  1 2021)       blink.s   8-28-2024  13:57:32         PAGE  4
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RP0                               00000005
+RP1                               00000006
+STATUS                            00000003
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TRISA                             00000085
+TRISA0                            00000000
+TRISA1                            00000001
+TRISA2                            00000002
+TRISA3                            00000003
+TRISA4                            00000004
+TRISB                             00000086
+TRISB0                            00000000
+TRISB1                            00000001
+TRISB2                            00000002
+TRISB3                            00000003
+TRISB4                            00000004
+TRISB5                            00000005
+TRISB6                            00000006
+TRISB7                            00000007
+W                                 00000000
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_CONFIG                           00002007
+_CP_OFF                           00003FFF
+_CP_ON                            0000000F
+_FOSC_EXTRC                       00003FFF
+_FOSC_HS                          00003FFE
+_FOSC_LP                          00003FFC
+_FOSC_XT                          00003FFD
+_HS_OSC                           00003FFE
+_IDLOC0                           00002000
+_IDLOC1                           00002001
+_IDLOC2                           00002002
+_IDLOC3                           00002003
+_LP_OSC                           00003FFC
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDTE_OFF                         00003FFB
+_WDTE_ON                          00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_XT_OSC                           00003FFD
+__16F84                           00000001
+__CODE_END                        000003FF
+gpasm-1.4.0 #1107 (Jan  1 2021)       blink.s   8-28-2024  13:57:32         PAGE  5
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+__CODE_START                      00000000
+__COMMON_RAM_END                  0000004F
+__COMMON_RAM_START                0000000C
+__EEPROM_END                      0000213F
+__EEPROM_START                    00002100
+__VECTOR_INT                      00000004
+__VECTOR_RESET                    00000000
+f                                 00000001
+porta                             00000005
+portb                             00000006
+tmp                               0000000E
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : XXXXXXXXXXXXXXXX XXXXXXX--------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:    23
+Program Memory Words Free:  1001
+
+
+Errors   :     0
+Warnings :     2 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+

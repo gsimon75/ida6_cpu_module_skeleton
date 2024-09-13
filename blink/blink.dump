@@ -1,0 +1,31 @@
+addr*2 data     op
+------ ----     --
+000000 280f     goto 0x0f
+
+Delay:
+000002 30ff     movlw 0xff
+000004 008c     movwf 0x0c
+000006 0000     nop
+000008 0b8c     decfsz 0x0c, 1
+00000a 2803     goto 0x03
+00000c 0008     return
+
+Long_Delay:
+00000e 008e     movwf 0x0e
+000010 30ff     movlw 0xff
+000012 008d     movwf 0x0d
+000014 2001     call 0x01
+000016 0b8d     decfsz 0x0e, 1
+000018 280a     goto 0x0a
+00001a 080e     movf 0x0e, 0
+00001c 0008     return
+
+00001e 3000
+000020 0065
+000022 0066
+000024 30ff
+000026 0086
+000028 2007
+00002a 0986
+00002c 2814
+00002e
